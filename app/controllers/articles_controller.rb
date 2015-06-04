@@ -1,6 +1,7 @@
 class ArticlesController < ApplicationController
 
   before_action(:set_article, only: [:show, :edit, :update, :destroy])
+
   def index
     @articles = Article.all
   end
@@ -24,6 +25,7 @@ class ArticlesController < ApplicationController
 
   def destroy
     @article.destroy
+    flash.notice = "Article '#{@article.title}' DELETED!!"
     redirect_to(articles_path)
   end
 
@@ -31,7 +33,13 @@ class ArticlesController < ApplicationController
   end
 
   def update
-
+    if @article.update(article_params)
+      flash.notice = "Article '#{@article.title}' Updated!"
+      redirect_to article_path(@article)
+    else
+      render :edit
+    end
+    # want to update and then redirect to the show page
   end
 
   private
